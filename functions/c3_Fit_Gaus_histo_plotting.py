@@ -3,7 +3,6 @@ from matplotlib import pyplot as plt
 import numpy as np
 import sys,os
 from sympy import exp,sqrt,pi,Integral
-sys.path.append("/Users/leejunho/Desktop/git/python3Env/group_study/project_pre/func/")
 from c1_basic_statistic import *
 
 
@@ -89,7 +88,8 @@ def Fit_Gaus_histo(filename, Xaxis_Name=''):
 
 
 def main():
-    inputfile = "/Users/leejunho/Desktop/git/python3Env/group_study/TESTs/project_180401/project1_10K.txt"
+    inputfile = "/Users/leejunho/Desktop/git/python3Env/group_study/TESTs/project_180408/project1_1M.txt"
+#    inputfile = "/Users/leejunho/Desktop/git/python3Env/group_study/TESTs/project_180401/project1_10K.txt"
 #    inputfile = "/Users/leejunho/Desktop/git/python3Env/group_study/TESTs/project_180324/data_txt/concrete_tree_cut_concrete_f_fineagg_hist.txt"
 #    inputfile = "/Users/leejunho/Desktop/git/python3Env/group_study/fruit_team/ROOT/Project/tranfer_test/data/soomin/LA_s/EXE/beer_0319Mon_LA_s_tree_beer_0319Mon_LA_s_POSP_hist.txt"
 #    inputfile = "/Users/leejunho/Desktop/git/python3Env/group_study/fruit_team/ROOT/Project/tranfer_test/data/soomin/LA_s/EXE/beer_0319Mon_LA_s_tree_beer_0319Mon_LA_s_V1_hist.txt"
