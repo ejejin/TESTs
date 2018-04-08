@@ -1,5 +1,12 @@
 #Author : Junho LEE
 
+def bin_num(filename):
+    infile = open(filename,"r")
+    ii = 0
+    for line in infile:
+        ii = ii + 1
+    return ii
+
 def most_frequent_bin(filename):
     infile = open(filename,"r")
     point = 0.0

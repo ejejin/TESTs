@@ -1,12 +1,14 @@
 #Author : JUNHO LEE
 from matplotlib import pyplot as plt
-import numpy
+import numpy as np
 import sys,os
+from scipy import stats
+from sympy import exp,sqrt,pi,Integral
 sys.path.append("/Users/leejunho/Desktop/git/python3Env/group_study/project_pre/func/")
 from c1_basic_statistic import *
 
 
-def Basic_histo(filename, Xaxis_Name='', norm=0):
+def Fit_Poisson_histo(filename, Xaxis_Name=''):
 
     if(filename[0]=="/"):
         filename = filename
@@ -22,13 +24,30 @@ def Basic_histo(filename, Xaxis_Name='', norm=0):
     filename_No_Txt = FILENAME.replace(".txt","")
 
     infile = filename
+    BIN_NUM = bin_num(infile);        #print(BIN_NUM)
     Mode = most_frequent_bin(infile); #print(type(Mode)); print(Mode)
     Median = c1_median(infile)
-    Range = c1_data_range(infile);   # print(Range)
+    Range = c1_data_range(infile);    #print(Range)
     Total_Entry = c1_total_ENTRY(infile); Total_Entry = int(Total_Entry); str_TE = str(Total_Entry)
     Mean = c1_mean(infile);  str_Mean = str(Mean)
     Var = c1_variance(infile);
     Std = c1_standard_deviation(infile); str_Std = str(Std)
+
+    FROM = Range[0]; END = Range[1];  #print(BIN_NUM, FROM, END)
+    Brange = (END-FROM)/BIN_NUM; 
+    t = np.arange(FROM, END, Brange) 
+#    gaussian = (1/(Std * np.sqrt(2 * np.pi))*np.exp(-(t-Mean)**2/(2 * Std**2)))
+    tt = np.arange(0, int(END)+1)
+    Poisson = stats.poisson.pmf(tt, Mean); #print(Poisson)
+    TJG=0
+    for i in range(len(Poisson)):
+        TJG = TJG + Poisson[i]
+#    print(TJG)
+    TJG = Total_Entry / TJG 
+#    print(TJG)
+    for i in range(len(Poisson)):
+        Poisson[i] = TJG * Poisson[i]
+    #s2 = 50*np.sin(4*np.pi*t); #print(s2)
 
     str_Mean = str_Mean[:len(str_TE)+2]; #print(str_Mean)    
     str_Std = str_Std[:len(str_TE)+2]; #print(str_Std)
@@ -45,24 +64,17 @@ def Basic_histo(filename, Xaxis_Name='', norm=0):
         X_WIDTH.append((float(xaxis1)-float(xaxis0)))
         Y_VALUE.append(float(yaxis))
         BinN = BinN + 1
-#    print(X_AXIS[0]); print(X_AXIS[BinN-1])
     
-    WEIGHT = 1
-    if(norm==1):
-        WEIGHT = float(Total_Entry)
-    for i in range(len(Y_VALUE)):
-        Y_VALUE[i] = float(Y_VALUE[i])/WEIGHT
 
-    fig = plt.figure(1)
-#    barlist = plt.bar(X_AXIS,Y_VALUE,X_WIDTH[0])
+    plt.figure(1)
+#    plt.plot(t,s2)
+    plt.plot(tt,Poisson)
     barlist = plt.bar(X_AXIS,Y_VALUE,X_WIDTH[0],fill=False)
-#    print(len(barlist))
     for i in range(len(barlist)):
-        barlist[i].set_color('b')
-    plt.axis([X_AXIS[0],X_AXIS[BinN-1],0,Mode[2]*10/9/WEIGHT])
+        barlist[i].set_color('r')
+    plt.axis([X_AXIS[0],X_AXIS[BinN-1],0,Mode[2]*10/9])
     TEXT = "Total Entry : " + str(Total_Entry) + "\n" + "Mean : " + str_Mean + "\n" + "Std : " + str_Std
-    plt.text(Range[1]-(Range[1]-Range[0])*0.05, Mode[2]*21/20/WEIGHT, TEXT, fontsize=16, ha='right', va='top', rotation=0)
-#    print(plt.ylim()); print(type(plt.ylim()))
+    plt.text(Range[1]-(Range[1]-Range[0])*0.05, Mode[2]*21/20, TEXT, fontsize=16, ha='right', va='top', rotation=0)
     plt.ylabel("Entry Number")
     if(Xaxis_Name == ''):
         XLABEL = filename_No_Txt.replace("_hist",'')
@@ -70,7 +82,7 @@ def Basic_histo(filename, Xaxis_Name='', norm=0):
         XLABEL = Xaxis_Name
     plt.xlabel(XLABEL)
     plt.title(filename_No_Txt)
-    SaveName = filename_No_Txt + ".pdf"
+    SaveName = filename_No_Txt +"Poisson_normalized"+ ".pdf"
     plt.grid(True)
     plt.savefig(SaveName)
     plt.show()
@@ -78,24 +90,15 @@ def Basic_histo(filename, Xaxis_Name='', norm=0):
     f.close()
 
 
-def looping_Basic_histo(filenameList, Xaxis_Name=''):
-    for filename in filenameList:
-        Basic_histo(filename, Xaxis_Name='')
-
 
 def main():
-    inputfile = "/Users/leejunho/Desktop/git/python3Env/group_study/TESTs/project_180324/data_txt/concrete_tree_cut_concrete_f_fineagg_hist.txt"
-#    inputfile = "/Users/leejunho/Desktop/git/python3Env/group_study/TESTs/project_180324/data_txt/"
-#    inputfile = "/Users/leejunho/Desktop/git/python3Env/group_study/TESTs/project_180324/data_txt/"
-#    inputfile = "/Users/leejunho/Desktop/git/python3Env/group_study/TESTs/project_180324/data_txt/"
+#    inputfile = "/Users/leejunho/Desktop/git/python3Env/group_study/TESTs/project_180401/project1_10K.txt"
+#    inputfile = "/Users/leejunho/Desktop/git/python3Env/group_study/TESTs/project_180324/data_txt/concrete_tree_cut_concrete_f_fineagg_hist.txt"
+#    inputfile = "/Users/leejunho/Desktop/git/python3Env/group_study/fruit_team/ROOT/Project/tranfer_test/data/soomin/LA_s/EXE/beer_0319Mon_LA_s_tree_beer_0319Mon_LA_s_POSP_hist.txt"
+#    inputfile = "/Users/leejunho/Desktop/git/python3Env/group_study/fruit_team/ROOT/Project/tranfer_test/data/soomin/LA_s/EXE/beer_0319Mon_LA_s_tree_beer_0319Mon_LA_s_V1_hist.txt"
+    inputfile = "/Users/leejunho/Desktop/git/python3Env/group_study/fruit_team/ROOT/Project/soomin/POS_NEG_Points_Gaussian/N2_execute_n_fitting/beer_0319Mon_LA_s_P_tree_beer_0319Mon_LA_s_P_Pos_score_hist.txt"
 
-#    inputfile = "/Users/leejunho/Desktop/git/python3Env/group_study/TESTs/project_180324/data_txt/root2_tree_cut_tree1_f_py_hist.txt"
-#    inputfile = "/Users/leejunho/Desktop/git/python3Env/group_study/TESTs/project_180324/data_txt/root2_tree_cut_tree1_f_px_hist.txt"
-#    inputfile = "/Users/leejunho/Desktop/git/python3Env/group_study/TESTs/project_180324/data_txt/root2_tree_cut_tree2_f_pz_hist.txt"
-#    inputfile = "/Users/leejunho/Desktop/git/python3Env/group_study/TESTs/project_180324/data_txt/concrete_tree_cut_concrete_f_strength_hist.txt" 
-#    inputfile = "../root1_project.txt" 
-    Basic_histo(inputfile, ".X-axis.", norm=0)
-#    Basic_histo(inputfile, ".X-axis.", norm=True)
+    Fit_Poisson_histo(inputfile, ".X-axis.")
 
 
 if __name__ == "__main__":

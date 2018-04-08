@@ -6,7 +6,7 @@ sys.path.append("/Users/leejunho/Desktop/git/python3Env/group_study/project_pre/
 from c1_basic_statistic import *
 
 
-def Basic_histo(filename, Xaxis_Name='', norm=0):
+def Basic_histo(filename, Xaxis_Name=''):
 
     if(filename[0]=="/"):
         filename = filename
@@ -47,21 +47,16 @@ def Basic_histo(filename, Xaxis_Name='', norm=0):
         BinN = BinN + 1
 #    print(X_AXIS[0]); print(X_AXIS[BinN-1])
     
-    WEIGHT = 1
-    if(norm==1):
-        WEIGHT = float(Total_Entry)
-    for i in range(len(Y_VALUE)):
-        Y_VALUE[i] = float(Y_VALUE[i])/WEIGHT
 
-    fig = plt.figure(1)
+    fig = plt.figure()
 #    barlist = plt.bar(X_AXIS,Y_VALUE,X_WIDTH[0])
     barlist = plt.bar(X_AXIS,Y_VALUE,X_WIDTH[0],fill=False)
 #    print(len(barlist))
     for i in range(len(barlist)):
         barlist[i].set_color('b')
-    plt.axis([X_AXIS[0],X_AXIS[BinN-1],0,Mode[2]*10/9/WEIGHT])
+    plt.axis([X_AXIS[0],X_AXIS[BinN-1],0,Mode[2]*10/9])
     TEXT = "Total Entry : " + str(Total_Entry) + "\n" + "Mean : " + str_Mean + "\n" + "Std : " + str_Std
-    plt.text(Range[1]-(Range[1]-Range[0])*0.05, Mode[2]*21/20/WEIGHT, TEXT, fontsize=16, ha='right', va='top', rotation=0)
+    plt.text(Range[1]-(Range[1]-Range[0])*0.05, Mode[2]*21/20, TEXT, fontsize=16, ha='right', va='top', rotation=0)
 #    print(plt.ylim()); print(type(plt.ylim()))
     plt.ylabel("Entry Number")
     if(Xaxis_Name == ''):
@@ -70,11 +65,10 @@ def Basic_histo(filename, Xaxis_Name='', norm=0):
         XLABEL = Xaxis_Name
     plt.xlabel(XLABEL)
     plt.title(filename_No_Txt)
-    SaveName = filename_No_Txt + ".pdf"
+    SaveName = filename_No_Txt + ".png"
     plt.grid(True)
     plt.savefig(SaveName)
-    plt.show()
-    plt.close('all')
+#    plt.show()
     f.close()
 
 
@@ -94,8 +88,7 @@ def main():
 #    inputfile = "/Users/leejunho/Desktop/git/python3Env/group_study/TESTs/project_180324/data_txt/root2_tree_cut_tree2_f_pz_hist.txt"
 #    inputfile = "/Users/leejunho/Desktop/git/python3Env/group_study/TESTs/project_180324/data_txt/concrete_tree_cut_concrete_f_strength_hist.txt" 
 #    inputfile = "../root1_project.txt" 
-    Basic_histo(inputfile, ".X-axis.", norm=0)
-#    Basic_histo(inputfile, ".X-axis.", norm=True)
+    Basic_histo(inputfile, ".X-axis.")
 
 
 if __name__ == "__main__":
